@@ -10,6 +10,7 @@ import SwiftData
 
 // Main View as TabView holding all data
 struct ContentView: View {
+    
     // Prepare for use of modelContext and system theme settings
     @Environment(\.modelContext) private var modelContext
     @Environment(\.colorScheme) var systemColorScheme

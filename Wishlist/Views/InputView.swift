@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct InputView: View {
+    
     @Environment(\.modelContext) private var modelContext
     @Environment(\.colorScheme) var systemColorScheme
     @Environment(\.dismiss) private var dismiss
