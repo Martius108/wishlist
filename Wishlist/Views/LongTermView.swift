@@ -24,7 +24,7 @@ struct LongTermView: View {
                 Color(hex: settings.backgroundColor).ignoresSafeArea()
 
                 VStack {
-                    Text("Short Term Wishes")
+                    Text("Long Term Wishes")
                         .font(.title)
                         .foregroundColor(settings.themeMode == "dark" ? .white :
                                 settings.themeMode == "light" ? .black : .primary)

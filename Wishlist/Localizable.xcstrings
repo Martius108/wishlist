@@ -97,23 +97,6 @@
         }
       }
     },
-    "Kategorie" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kategorie "
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Category"
-          }
-        }
-      }
-    },
     "Light" : {
       "localizations" : {
         "de" : {
@@ -158,6 +141,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Long Term"
+          }
+        }
+      }
+    },
+    "Long Term Wishes" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Langfristige Wünsche"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Long Term Wishes"
           }
         }
       }
