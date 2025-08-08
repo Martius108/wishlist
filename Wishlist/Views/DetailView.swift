@@ -78,7 +78,7 @@ struct DetailView: View {
                             item.name = name
                             item.remark = remark
                             item.link = link
-                            if let priceValue = Double(priceString) {
+                            if let priceValue = parseAmount(priceString) {
                                 item.price = priceValue
                             }
                             dismiss()
@@ -98,7 +98,7 @@ struct DetailView: View {
                     name = item.name
                     remark = item.remark
                     link = item.link
-                    priceString = item.price.formatted(.currency(code: Locale.current.currency?.identifier ?? "EUR"))
+                    priceString = formatAmountForEditing(item.price)
                 }
                 Spacer()
             } else if let item = midItem {
@@ -151,7 +151,7 @@ struct DetailView: View {
                             item.name = name
                             item.remark = remark
                             item.link = link
-                            if let priceValue = Double(priceString) {
+                            if let priceValue = parseAmount(priceString) {
                                 item.price = priceValue
                             }
                             dismiss()
@@ -171,7 +171,7 @@ struct DetailView: View {
                     name = item.name
                     remark = item.remark
                     link = item.link
-                    priceString = item.price.formatted(.currency(code: Locale.current.currency?.identifier ?? "EUR"))
+                    priceString = formatAmountForEditing(item.price)
                 }
                 Spacer()
             } else if let item = longItem {
@@ -243,7 +243,7 @@ struct DetailView: View {
                     name = item.name
                     remark = item.remark
                     link = item.link
-                    priceString = item.price.formatted(.currency(code: Locale.current.currency?.identifier ?? "EUR"))
+                    priceString = formatAmountForEditing(item.price)
                 }
             } else {
                 Text("No entry found.")
@@ -256,6 +256,33 @@ struct DetailView: View {
     }
     
     func parseAmount(_ string: String) -> Double? {
-        Double(string.replacingOccurrences(of: ",", with: ".").trimmingCharacters(in: .whitespaces))
+        let locale = Locale.current
+        let decimalSep = locale.decimalSeparator ?? "."
+        let groupSep = locale.groupingSeparator ?? ","
+        let currencySym = locale.currencySymbol ?? ""
+
+        var s = string
+        // Remove currency symbol and spaces
+        if !currencySym.isEmpty { s = s.replacingOccurrences(of: currencySym, with: "") }
+        s = s.replacingOccurrences(of: "\u{00A0}", with: "") // non-breaking space
+        s = s.replacingOccurrences(of: " ", with: "")
+        // Remove grouping separators
+        s = s.replacingOccurrences(of: groupSep, with: "")
+        // Normalize decimal separator to '.' for Double init
+        if decimalSep != "." { s = s.replacingOccurrences(of: decimalSep, with: ".") }
+        // Trim
+        s = s.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        return Double(s)
+    }
+
+    /// Formats a Double for editing (no currency symbol, localized decimal/grouping)
+    func formatAmountForEditing(_ value: Double) -> String {
+        let f = NumberFormatter()
+        f.locale = Locale.current
+        f.numberStyle = .decimal
+        f.minimumFractionDigits = 0
+        f.maximumFractionDigits = 2
+        return f.string(from: NSNumber(value: value)) ?? String(value)
     }
 }
