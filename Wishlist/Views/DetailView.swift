@@ -281,7 +281,7 @@ struct DetailView: View {
         let f = NumberFormatter()
         f.locale = Locale.current
         f.numberStyle = .decimal
-        f.minimumFractionDigits = 0
+        f.minimumFractionDigits = 2
         f.maximumFractionDigits = 2
         return f.string(from: NSNumber(value: value)) ?? String(value)
     }
