@@ -6,7 +6,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gebe einen neuen Wunsch ein"
+            "value" : "Gib einen neuen Wunsch ein"
           }
         },
         "en" : {
@@ -29,6 +29,39 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Background Color"
+          }
+        }
+      }
+    },
+    "Background Image" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hintergrundbild"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Background Image"
+          }
+        }
+      }
+    },
+    "Copy Wishlist" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wunschliste kopieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy Wishlist"
           }
         }
       }
@@ -60,7 +93,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Delete "
+            "value" : "Delete"
           }
         }
       }
@@ -194,6 +227,22 @@
         }
       }
     },
+    "My Wishlist" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meine Wunschliste"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "My Wishlist"
+          }
+        }
+      }
+    },
     "Name" : {
       "localizations" : {
         "de" : {
@@ -263,7 +312,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bitte gebe eine gültige URL ein."
+            "value" : "Bitte gib eine gültige URL ein."
           }
         },
         "en" : {
@@ -370,12 +419,28 @@
         }
       }
     },
+    "Select Background Image" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hintergrundbild wählen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select Background Image"
+          }
+        }
+      }
+    },
     "Select Theme" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wähle das Theme"
+            "value" : "Darstellung wählen"
           }
         },
         "en" : {
@@ -414,6 +479,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Share URL"
+          }
+        }
+      }
+    },
+    "Share Wishlist" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wunschliste teilen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share Wishlist"
           }
         }
       }
@@ -471,7 +552,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Theme Modus"
+            "value" : "Darstellungsmodus"
           }
         },
         "en" : {
@@ -510,6 +591,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "URL:"
+          }
+        }
+      }
+    },
+    "Wishlist copied" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wunschliste kopiert"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wishlist copied"
           }
         }
       }

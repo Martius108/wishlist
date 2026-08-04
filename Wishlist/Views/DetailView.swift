@@ -27,7 +27,7 @@ struct DetailView: View {
     @State private var priceString: String = ""
     
     var body: some View {
-        VStack {
+        ScrollView {
             if let item = shortItem {
                 VStack(alignment: .leading, spacing: 16) {
                     Text("Name:")
@@ -252,37 +252,15 @@ struct DetailView: View {
         }
         // Apply new background if settings are available
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(hex: settings.backgroundColor))
+        .wishlistBackground(settings)
     }
     
     func parseAmount(_ string: String) -> Double? {
-        let locale = Locale.current
-        let decimalSep = locale.decimalSeparator ?? "."
-        let groupSep = locale.groupingSeparator ?? ","
-        let currencySym = locale.currencySymbol ?? ""
-
-        var s = string
-        // Remove currency symbol and spaces
-        if !currencySym.isEmpty { s = s.replacingOccurrences(of: currencySym, with: "") }
-        s = s.replacingOccurrences(of: "\u{00A0}", with: "") // non-breaking space
-        s = s.replacingOccurrences(of: " ", with: "")
-        // Remove grouping separators
-        s = s.replacingOccurrences(of: groupSep, with: "")
-        // Normalize decimal separator to '.' for Double init
-        if decimalSep != "." { s = s.replacingOccurrences(of: decimalSep, with: ".") }
-        // Trim
-        s = s.trimmingCharacters(in: .whitespacesAndNewlines)
-
-        return Double(s)
+        WishlistAmountFormatter.parse(string)
     }
 
-    /// Formats a Double for editing (no currency symbol, localized decimal/grouping)
+    /// Formats a value for editing without a currency symbol.
     func formatAmountForEditing(_ value: Double) -> String {
-        let f = NumberFormatter()
-        f.locale = Locale.current
-        f.numberStyle = .decimal
-        f.minimumFractionDigits = 2
-        f.maximumFractionDigits = 2
-        return f.string(from: NSNumber(value: value)) ?? String(value)
+        WishlistAmountFormatter.format(value)
     }
 }

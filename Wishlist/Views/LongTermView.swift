@@ -13,6 +13,7 @@ struct LongTermView: View {
     // Include modelContext and colorScheme
     @Environment(\.modelContext) private var modelContext
     @Environment(\.colorScheme) var systemColorScheme
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     // Binding to the settings object
     @Bindable var settings: MySettings
     // Create an instance of the data base
@@ -21,7 +22,7 @@ struct LongTermView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color(hex: settings.backgroundColor).ignoresSafeArea()
+                WishlistBackground(settings: settings)
 
                 VStack {
                     Text("Long Term Wishes")
@@ -32,8 +33,12 @@ struct LongTermView: View {
                     
                     NavigationLink(destination: InputView(settings: settings, type: .long)) {
                         Label("Add a new wish", systemImage: "square.and.pencil")
-                            .padding(.bottom, 30)
+                            .foregroundStyle(.tint)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 8)
+                            .background(.bar, in: Capsule())
                     }
+                    .padding(.bottom, 30)
 
                     ScrollView {
                         LazyVStack(spacing: 0) {
@@ -42,7 +47,11 @@ struct LongTermView: View {
                                     itemRow(item: item)
                                 }
                             }
+
+                            WishlistShareLink(links: longItem.map(\.link))
+                                .padding(.vertical, 20)
                         }
+                        .padding(.horizontal, horizontalSizeClass == .regular ? UIScreen.main.bounds.width * 0.1 : 0)
                     }
                 }
             }
@@ -73,7 +82,7 @@ struct LongTermView: View {
         .padding(.bottom, 8)
         .padding(.leading, 15)
         .padding(.trailing, 15)
-        .frame(maxWidth: 0.92 * UIScreen.main.bounds.width)
+        .frame(maxWidth: .infinity)
         .background(Color.white)
         .cornerRadius(8)
         .padding(.top, 3)

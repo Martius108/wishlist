@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import PhotosUI
 
 // View for adjusting app settings like theme, background, and opacity
 struct SettingsView: View {
@@ -14,6 +15,7 @@ struct SettingsView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.colorScheme) var colorScheme
     @Bindable var settings: MySettings
+    @State private var selectedPhoto: PhotosPickerItem?
 
     var body: some View {
         
@@ -49,10 +51,18 @@ struct SettingsView: View {
                 ColorPicker("Select Background Color", selection: Binding(
                     get: { Color(hex: settings.backgroundColor) },
                     set: { newColor in
+                        settings.backgroundImageData = nil
                         settings.backgroundColor = newColor.toHex()
                         try? modelContext.save()
                     }
                 ))
+
+                Text("Background Image")
+                    .font(.headline)
+
+                PhotosPicker(selection: $selectedPhoto, matching: .images) {
+                    Label("Select Background Image", systemImage: "photo")
+                }
             }
             .padding()
             .foregroundColor(
@@ -62,8 +72,15 @@ struct SettingsView: View {
             )
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(hex: settings.backgroundColor))
+        .wishlistBackground(settings)
         .navigationTitle("Settings")
+        .task(id: selectedPhoto) {
+            guard let data = try? await selectedPhoto?.loadTransferable(type: Data.self) else {
+                return
+            }
+            settings.backgroundImageData = data
+            try? modelContext.save()
+        }
         .onDisappear {
             do {
                 try modelContext.save()

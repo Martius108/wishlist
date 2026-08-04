@@ -7,3 +7,4 @@
 */
 
 CFBundleDisplayName = "Wishlist";
+CFBundleName = "Wishlist";

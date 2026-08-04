@@ -43,6 +43,7 @@ struct InputView: View {
                     }
                 }
             }
+            .scrollContentBackground(.hidden)
             .alert("Invalid URL!", isPresented: $showInvalidLinkAlert) {
                 Button("OK", role: .cancel) { }
             } message: {
@@ -51,7 +52,7 @@ struct InputView: View {
         }
         // Apply new background if settings are available
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(hex: settings.backgroundColor))
+        .wishlistBackground(settings)
     }
     
     private func addWish() {
@@ -81,7 +82,7 @@ struct InputView: View {
     }
     
     func parseAmount(_ string: String) -> Double? {
-        Double(string.replacingOccurrences(of: ",", with: ".").trimmingCharacters(in: .whitespaces))
+        WishlistAmountFormatter.parse(string)
     }
 }
 
