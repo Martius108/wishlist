@@ -27,8 +27,7 @@ struct ShortTermView: View {
                 VStack {
                     Text("Short Term Wishes")
                         .font(.title)
-                        .foregroundColor(settings.themeMode == "dark" ? .white :
-                                settings.themeMode == "light" ? .black : .primary)
+                        .foregroundStyle(.tint)
                         .padding()
                     
                     NavigationLink(destination: InputView(settings: settings, type: .short)) {

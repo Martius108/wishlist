@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import UIKit
+import UniformTypeIdentifiers
 
 struct WishlistBackground: View {
     @Bindable var settings: MySettings
@@ -31,15 +32,60 @@ struct WishlistBackground: View {
 
 struct WishlistShareLink: View {
     let links: [String]
+    @State private var isShareSheetPresented = false
 
     var body: some View {
-        ShareLink(item: WishlistShareText.make(links: links), subject: Text("My Wishlist")) {
+        Button {
+            isShareSheetPresented = true
+        } label: {
             Label("Share Wishlist", systemImage: "square.and.arrow.up")
                 .foregroundStyle(.tint)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 8)
                 .background(.bar, in: Capsule())
         }
+        .sheet(isPresented: $isShareSheetPresented) {
+            WishlistShareSheet(text: WishlistShareText.make(links: links))
+        }
+    }
+}
+
+private struct WishlistShareSheet: UIViewControllerRepresentable {
+    let text: String
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(
+            activityItems: [WishlistActivityItemSource(text: text)],
+            applicationActivities: nil
+        )
+    }
+
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
+}
+
+private final class WishlistActivityItemSource: NSObject, UIActivityItemSource {
+    private let text: String
+
+    init(text: String) {
+        self.text = text
+    }
+
+    func activityViewControllerPlaceholderItem(_ activityViewController: UIActivityViewController) -> Any {
+        WishlistShareText.withoutLinkPreviews(text) as NSString
+    }
+
+    func activityViewController(
+        _ activityViewController: UIActivityViewController,
+        itemForActivityType _: UIActivity.ActivityType?
+    ) -> Any? {
+        WishlistShareText.withoutLinkPreviews(text) as NSString
+    }
+
+    func activityViewController(
+        _ activityViewController: UIActivityViewController,
+        dataTypeIdentifierForActivityType activityType: UIActivity.ActivityType?
+    ) -> String {
+        UTType.utf8PlainText.identifier
     }
 }
 
@@ -51,6 +97,12 @@ enum WishlistShareText {
 
         return ([String(localized: "My Wishlist")] + links)
             .joined(separator: "\n\n")
+    }
+
+    static func withoutLinkPreviews(_ text: String) -> String {
+        text
+            .replacingOccurrences(of: "https://", with: "https://\u{200B}")
+            .replacingOccurrences(of: "http://", with: "http://\u{200B}")
     }
 }
 
@@ -89,4 +141,5 @@ extension View {
             WishlistBackground(settings: settings)
         }
     }
+
 }

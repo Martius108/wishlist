@@ -49,4 +49,11 @@ final class WishlistLogicTests: XCTestCase {
         XCTAssertTrue(text.hasPrefix(String(localized: "My Wishlist")))
         XCTAssertTrue(text.hasSuffix("https://example.com/one\n\nhttps://example.com/two"))
     }
+
+    func testSignalShareTextDisablesLinkPreviews() {
+        let text = WishlistShareText.withoutLinkPreviews("My Wishlist\n\nhttps://example.com/one\n\nhttps://example.com/two")
+
+        XCTAssertTrue(text.contains("https://\u{200B}example.com/one"))
+        XCTAssertTrue(text.contains("https://\u{200B}example.com/two"))
+    }
 }

@@ -27,8 +27,7 @@ struct LongTermView: View {
                 VStack {
                     Text("Long Term Wishes")
                         .font(.title)
-                        .foregroundColor(settings.themeMode == "dark" ? .white :
-                                settings.themeMode == "light" ? .black : .primary)
+                        .foregroundStyle(.tint)
                         .padding()
                     
                     NavigationLink(destination: InputView(settings: settings, type: .long)) {
