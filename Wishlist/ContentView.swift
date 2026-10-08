@@ -14,7 +14,6 @@ struct ContentView: View {
     
     // Prepare for use of modelContext and system theme settings
     @Environment(\.modelContext) private var modelContext
-    @Environment(\.colorScheme) var systemColorScheme
     // Set the query to hold the item names
     @Query(sort: \LongItems.name) var longItems: [LongItems]
     @Query(sort: \MidItems.name) var midItems: [MidItems]
@@ -27,7 +26,7 @@ struct ContentView: View {
     var settings: MySettings {
         cachedSettings ?? MySettings(
             themeMode: "system",
-            backgroundColor: systemColorScheme == .dark ? "#000000" : "#FFFFFF"
+            backgroundColor: MySettings.systemBackgroundColor
         )
     }
     
@@ -57,6 +56,7 @@ struct ContentView: View {
                     Text("Settings")
                 }
         }
+        .preferredColorScheme(preferredColorScheme)
         .onAppear {
             if cachedSettings == nil {
                 if let loaded = mySettings.first {
@@ -64,12 +64,20 @@ struct ContentView: View {
                 } else {
                     let fallback = MySettings(
                         themeMode: "system",
-                        backgroundColor: systemColorScheme == .dark ? "#000000" : "#FFFFFF"
+                        backgroundColor: MySettings.systemBackgroundColor
                     )
                     modelContext.insert(fallback)
                     cachedSettings = fallback
                 }
             }
+        }
+    }
+
+    private var preferredColorScheme: ColorScheme? {
+        switch settings.themeMode {
+        case "light": .light
+        case "dark": .dark
+        default: nil
         }
     }
 }

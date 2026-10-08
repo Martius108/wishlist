@@ -27,7 +27,11 @@ struct MidTermView: View {
                 VStack {
                     Text("Mid Term Wishes")
                         .font(.title)
-                        .foregroundStyle(.tint)
+                        .wishlistImageLabelStyle(
+                            settings.backgroundImageData != nil,
+                            fallbackColor: .blue
+                        )
+                        .frame(maxWidth: .infinity, alignment: .center)
                         .padding()
                     
                     NavigationLink(destination: InputView(settings: settings, type: .mid)) {
@@ -50,7 +54,7 @@ struct MidTermView: View {
                             WishlistShareLink(links: midItem.map(\.link))
                                 .padding(.vertical, 20)
                         }
-                        .padding(.horizontal, horizontalSizeClass == .regular ? UIScreen.main.bounds.width * 0.1 : 0)
+                        .padding(.horizontal, UIScreen.main.bounds.width * (horizontalSizeClass == .regular ? 0.1 : 0.025))
                     }
                 }
             }
@@ -59,28 +63,28 @@ struct MidTermView: View {
     
     // Row layout for a bought item, with a button to reactivate it
     private func itemRow(item: MidItems) -> some View {
-        HStack {
-            HStack() {
-                Text(item.name)
-                    .font(.system(size: 18))
-                    .foregroundColor(systemColorScheme == .dark ? .black : .black)
-                    .background(systemColorScheme == .dark ? Color.white : Color.white)
-                Spacer()
-                if item.price != 0 {
-                    Text(item.price, format: .currency(code: Locale.current.currency?.identifier ?? "EUR"))
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                        .padding(.trailing, 20)
-                }
+        HStack(alignment: .top, spacing: 8) {
+            Text(item.name)
+                .font(.system(size: 18))
+                .foregroundColor(systemColorScheme == .dark ? .black : .black)
+                .background(systemColorScheme == .dark ? Color.white : Color.white)
+                .multilineTextAlignment(.leading)
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            if item.price != 0 {
+                Text(WishlistAmountFormatter.currencyString(item.price))
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
+                    .fixedSize()
+                    .padding(.trailing, 6)
             }
-            Spacer()
             Image(systemName: "chevron.right")
                 .foregroundColor(.gray)
         }
         .padding(.top, 8)
         .padding(.bottom, 8)
         .padding(.leading, 15)
-        .padding(.trailing, 15)
+        .padding(.trailing, 8)
         .frame(maxWidth: .infinity)
         .background(Color.white)
         .cornerRadius(8)

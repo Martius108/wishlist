@@ -12,6 +12,7 @@ final class WishlistLogicTests: XCTestCase {
         let locale = Locale(identifier: "en_US")
 
         XCTAssertEqual(WishlistAmountFormatter.parse("1,234.56", locale: locale), 1_234.56)
+        XCTAssertEqual(WishlistAmountFormatter.parse("499.00", locale: locale), 499.00)
     }
 
     func testRejectsInvalidAmount() {
@@ -23,6 +24,13 @@ final class WishlistLogicTests: XCTestCase {
         let formatted = WishlistAmountFormatter.format(1_234.5, locale: locale)
 
         XCTAssertEqual(WishlistAmountFormatter.parse(formatted, locale: locale), 1_234.5)
+    }
+
+    func testEnglishCurrencyUsesUSFormatting() {
+        XCTAssertEqual(
+            WishlistAmountFormatter.currencyString(499, locale: Locale(identifier: "en_US")),
+            "$499.00"
+        )
     }
 
     func testWishModelsKeepTheirValues() {
@@ -40,7 +48,20 @@ final class WishlistLogicTests: XCTestCase {
 
         XCTAssertEqual(settings.themeMode, "system")
         XCTAssertNil(settings.backgroundImageData)
-        XCTAssertEqual(settings.backgroundColor, "#FFFFFF")
+        XCTAssertEqual(settings.backgroundColor, MySettings.systemBackgroundColor)
+    }
+
+    func testApplyingThemeRestoresSystemBackground() {
+        let settings = MySettings(
+            backgroundImageData: Data([1, 2, 3]),
+            backgroundColor: "#123456"
+        )
+
+        settings.applyTheme("dark")
+
+        XCTAssertEqual(settings.themeMode, "dark")
+        XCTAssertNil(settings.backgroundImageData)
+        XCTAssertEqual(settings.backgroundColor, MySettings.systemBackgroundColor)
     }
 
     func testWishlistShareTextIncludesOnlyNonEmptyLinks() {

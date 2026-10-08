@@ -49,23 +49,6 @@
         }
       }
     },
-    "Copy Wishlist" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wunschliste kopieren"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Copy Wishlist"
-          }
-        }
-      }
-    },
     "Dark" : {
       "localizations" : {
         "de" : {
@@ -591,23 +574,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "URL:"
-          }
-        }
-      }
-    },
-    "Wishlist copied" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wunschliste kopiert"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wishlist copied"
           }
         }
       }

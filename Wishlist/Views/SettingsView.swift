@@ -21,8 +21,16 @@ struct SettingsView: View {
         
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                Text("Theme Mode")
-                    .font(.headline)
+                Text("Settings")
+                    .font(.title)
+                    .wishlistImageLabelStyle(
+                        settings.backgroundImageData != nil,
+                        fallbackColor: .blue
+                    )
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .accessibilityAddTraits(.isHeader)
+
+                sectionTitle("Theme Mode")
 
                 Picker("Select Theme", selection: $settings.themeMode) {
                     Text("System")
@@ -36,32 +44,36 @@ struct SettingsView: View {
                         .foregroundColor(settings.themeMode == "dark" ? .white : .black)
                 }
                 .pickerStyle(.segmented)
-                .onChange(of: settings.themeMode) { oldValue, newValue in
-                    if newValue == "dark" {
-                        settings.backgroundColor = "#000000"
-                    } else if newValue == "light" {
-                        settings.backgroundColor = "#FFFFFF"
-                    }
+                .onChange(of: settings.themeMode) { _, newValue in
+                    settings.applyTheme(newValue)
+                    selectedPhoto = nil
                     try? modelContext.save()
                 }
 
-                Text("Background Color")
-                    .font(.headline)
+                sectionTitle("Background Color")
 
                 ColorPicker("Select Background Color", selection: Binding(
-                    get: { Color(hex: settings.backgroundColor) },
+                    get: { Color(wishlistBackground: settings.backgroundColor) },
                     set: { newColor in
+                        selectedPhoto = nil
                         settings.backgroundImageData = nil
                         settings.backgroundColor = newColor.toHex()
                         try? modelContext.save()
                     }
                 ))
+                .wishlistImageLabelStyle(
+                    settings.backgroundImageData != nil,
+                    fallbackColor: .primary
+                )
 
-                Text("Background Image")
-                    .font(.headline)
+                sectionTitle("Background Image")
 
                 PhotosPicker(selection: $selectedPhoto, matching: .images) {
                     Label("Select Background Image", systemImage: "photo")
+                        .wishlistImageLabelStyle(
+                            settings.backgroundImageData != nil,
+                            fallbackColor: .blue
+                        )
                 }
             }
             .padding()
@@ -73,13 +85,17 @@ struct SettingsView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .wishlistBackground(settings)
-        .navigationTitle("Settings")
-        .task(id: selectedPhoto) {
-            guard let data = try? await selectedPhoto?.loadTransferable(type: Data.self) else {
-                return
+        .onChange(of: selectedPhoto) { _, photo in
+            guard let photo else { return }
+            Task {
+                guard
+                    let data = try? await photo.loadTransferable(type: Data.self),
+                    selectedPhoto == photo
+                else { return }
+                settings.backgroundImageData = data
+                selectedPhoto = nil
+                try? modelContext.save()
             }
-            settings.backgroundImageData = data
-            try? modelContext.save()
         }
         .onDisappear {
             do {
@@ -89,5 +105,14 @@ struct SettingsView: View {
                 print("Saving settings on disappear failed: \(error.localizedDescription)")
             }
         }
+    }
+
+    private func sectionTitle(_ title: LocalizedStringKey) -> some View {
+        Text(title)
+            .font(.headline)
+            .wishlistImageLabelStyle(
+                settings.backgroundImageData != nil,
+                fallbackColor: .primary
+            )
     }
 }

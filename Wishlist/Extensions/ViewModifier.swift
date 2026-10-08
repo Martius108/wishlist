@@ -23,7 +23,7 @@ struct WishlistBackground: View {
                     .frame(width: geometry.size.width, height: geometry.size.height)
                     .clipped()
             } else {
-                Color(hex: settings.backgroundColor)
+                Color(wishlistBackground: settings.backgroundColor)
             }
         }
         .ignoresSafeArea()
@@ -139,6 +139,19 @@ extension View {
     func wishlistBackground(_ settings: MySettings) -> some View {
         background {
             WishlistBackground(settings: settings)
+        }
+    }
+
+    @ViewBuilder
+    func wishlistImageLabelStyle(_ imageBackground: Bool, fallbackColor: Color) -> some View {
+        if imageBackground {
+            self
+                .foregroundStyle(.tint)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 5)
+                .background(.bar, in: Capsule())
+        } else {
+            self.foregroundStyle(fallbackColor)
         }
     }
 

@@ -9,6 +9,14 @@ import SwiftUI
 
 // Extension to create a Color from a hex string and to convert a Color back to a hex string
 extension Color {
+
+    init(wishlistBackground value: String) {
+        if value == MySettings.systemBackgroundColor {
+            self.init(uiColor: .systemGroupedBackground)
+        } else {
+            self.init(hex: value)
+        }
+    }
     
     // Initializes a Color instance from a hexadecimal string
     init(hex: String) {
