@@ -22,7 +22,7 @@ struct InputView: View {
     @State private var priceString: String = ""
     @State private var showInvalidLinkAlert = false
     
-    var type: WishType
+    var wishlistID: UUID
 
     var body: some View {
         VStack {
@@ -65,17 +65,15 @@ struct InputView: View {
             }
             guard let price = parseAmount(priceString) else { return }
 
-            switch type {
-            case .short:
-                let newWish = ShortItems(name: name, remark: remark, link: link, price: price)
-                modelContext.insert(newWish)
-            case .mid:
-                let newWish = MidItems(name: name, remark: remark, link: link, price: price)
-                modelContext.insert(newWish)
-            case .long:
-                let newWish = LongItems(name: name, remark: remark, link: link, price: price)
-                modelContext.insert(newWish)
-            }
+            // shortcut: Keep legacy item models readable until a versioned data migration can unify them.
+            let newWish = ShortItems(
+                name: name,
+                remark: remark,
+                link: link,
+                price: price,
+                wishlistID: wishlistID
+            )
+            modelContext.insert(newWish)
             hideKeyboard()
             dismiss()
         }
@@ -90,8 +88,4 @@ extension View {
     func hideKeyboard() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
-}
-
-enum WishType {
-    case short, mid, long
 }

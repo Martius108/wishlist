@@ -34,13 +34,65 @@ final class WishlistLogicTests: XCTestCase {
     }
 
     func testWishModelsKeepTheirValues() {
+        let listID = UUID()
         let short = ShortItems(name: "Book", remark: "Hardcover", link: "https://example.com", price: 24.90)
-        let mid = MidItems(name: "Bike", remark: "Blue", link: "https://example.com", price: 799)
+        let mid = MidItems(
+            name: "Bike",
+            remark: "Blue",
+            link: "https://example.com",
+            price: 799,
+            wishlistID: listID
+        )
         let long = LongItems(name: "Trip", remark: "Japan", link: "https://example.com", price: 2_500)
 
         XCTAssertEqual(short.name, "Book")
         XCTAssertEqual(mid.remark, "Blue")
+        XCTAssertEqual(mid.wishlistID, listID)
         XCTAssertEqual(long.price, 2_500)
+    }
+
+    func testWishlistHasStableIdentifierAndDefaults() {
+        let id = UUID()
+        let wishlist = WishlistList(id: id, name: "Travel")
+
+        XCTAssertEqual(wishlist.id, id)
+        XCTAssertEqual(wishlist.name, "Travel")
+        XCTAssertTrue(wishlist.isVisible)
+        XCTAssertEqual(wishlist.sortOrder, 0)
+        XCTAssertEqual(WishlistList.maximumCount, 4)
+    }
+
+    func testFindsOnlyEmptyAssignedLegacyFourthWishlist() {
+        let standardLists = [
+            WishlistList(name: "Kurzfristig", sortOrder: 0),
+            WishlistList(name: "Mittelfristig", sortOrder: 1),
+            WishlistList(name: "Langfristig", sortOrder: 2)
+        ]
+        let placeholder = WishlistList(name: "Wunschliste", sortOrder: 3)
+        let wishlists = standardLists + [placeholder]
+
+        XCTAssertEqual(
+            WishlistList.legacyPlaceholder(
+                in: wishlists,
+                occupiedIDs: [],
+                hasUnassignedWishes: false
+            )?.id,
+            placeholder.id
+        )
+        XCTAssertNil(
+            WishlistList.legacyPlaceholder(
+                in: wishlists,
+                occupiedIDs: [placeholder.id],
+                hasUnassignedWishes: false
+            )
+        )
+        XCTAssertNil(
+            WishlistList.legacyPlaceholder(
+                in: wishlists,
+                occupiedIDs: [],
+                hasUnassignedWishes: true
+            )
+        )
     }
 
     func testSettingsDefaults() {

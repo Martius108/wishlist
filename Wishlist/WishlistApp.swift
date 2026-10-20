@@ -14,6 +14,6 @@ struct WishlistApp: App {
         WindowGroup {
             ContentView()
         }
-        .modelContainer(for: [MySettings.self, ShortItems.self, MidItems.self, LongItems.self])
+        .modelContainer(for: [MySettings.self, WishlistList.self, ShortItems.self, MidItems.self, LongItems.self])
     }
 }

@@ -14,6 +14,7 @@ struct DetailView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.colorScheme) var systemColorScheme
     @Environment(\.dismiss) private var dismiss
+    @Query(sort: \WishlistList.sortOrder) private var wishlists: [WishlistList]
     // Binding to the settings object
     @Bindable var settings: MySettings
 
@@ -71,6 +72,16 @@ struct DetailView: View {
                         Label("Share URL", systemImage: "square.and.arrow.up")
                             .padding(.top, 10)
                             .padding(.bottom, 15)
+                    }
+
+                    moveMenu(currentWishlistID: item.wishlistID) { destinationID in
+                        item.name = name
+                        item.remark = remark
+                        item.link = link
+                        if let priceValue = parseAmount(priceString) {
+                            item.price = priceValue
+                        }
+                        item.wishlistID = destinationID
                     }
 
                     HStack {
@@ -146,6 +157,16 @@ struct DetailView: View {
                             .padding(.bottom, 15)
                     }
 
+                    moveMenu(currentWishlistID: item.wishlistID) { destinationID in
+                        item.name = name
+                        item.remark = remark
+                        item.link = link
+                        if let priceValue = parseAmount(priceString) {
+                            item.price = priceValue
+                        }
+                        item.wishlistID = destinationID
+                    }
+
                     HStack {
                         Button("Save") {
                             item.name = name
@@ -219,6 +240,16 @@ struct DetailView: View {
                             .padding(.bottom, 15)
                     }
 
+                    moveMenu(currentWishlistID: item.wishlistID) { destinationID in
+                        item.name = name
+                        item.remark = remark
+                        item.link = link
+                        if let priceValue = parseAmount(priceString) {
+                            item.price = priceValue
+                        }
+                        item.wishlistID = destinationID
+                    }
+
                     HStack {
                         Button("Save") {
                             item.name = name
@@ -262,5 +293,29 @@ struct DetailView: View {
     /// Formats a value for editing without a currency symbol.
     func formatAmountForEditing(_ value: Double) -> String {
         WishlistAmountFormatter.format(value)
+    }
+
+    @ViewBuilder
+    private func moveMenu(
+        currentWishlistID: UUID?,
+        move: @escaping (UUID) -> Void
+    ) -> some View {
+        let destinations = wishlists.filter {
+            $0.isVisible && $0.id != currentWishlistID
+        }
+
+        if !destinations.isEmpty {
+            Menu {
+                ForEach(destinations) { wishlist in
+                    Button(wishlist.name) {
+                        move(wishlist.id)
+                        try? modelContext.save()
+                        dismiss()
+                    }
+                }
+            } label: {
+                Label("Move", systemImage: "arrow.right.arrow.left")
+            }
+        }
     }
 }

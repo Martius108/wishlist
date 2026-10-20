@@ -32,6 +32,7 @@ struct WishlistBackground: View {
 
 struct WishlistShareLink: View {
     let links: [String]
+    let imageBackground: Bool
     @State private var isShareSheetPresented = false
 
     var body: some View {
@@ -39,10 +40,10 @@ struct WishlistShareLink: View {
             isShareSheetPresented = true
         } label: {
             Label("Share Wishlist", systemImage: "square.and.arrow.up")
-                .foregroundStyle(.tint)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-                .background(.bar, in: Capsule())
+                .wishlistImageLabelStyle(
+                    imageBackground,
+                    fallbackColor: .accentColor
+                )
         }
         .sheet(isPresented: $isShareSheetPresented) {
             WishlistShareSheet(text: WishlistShareText.make(links: links))
@@ -146,10 +147,14 @@ extension View {
     func wishlistImageLabelStyle(_ imageBackground: Bool, fallbackColor: Color) -> some View {
         if imageBackground {
             self
-                .foregroundStyle(.tint)
+                .foregroundStyle(Color(uiColor: .systemBlue))
+                .fontWeight(.semibold)
                 .padding(.horizontal, 10)
                 .padding(.vertical, 5)
-                .background(.bar, in: Capsule())
+                .background(
+                    .bar,
+                    in: RoundedRectangle(cornerRadius: 8, style: .continuous)
+                )
         } else {
             self.foregroundStyle(fallbackColor)
         }

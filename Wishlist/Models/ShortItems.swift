@@ -15,11 +15,13 @@ final class ShortItems {
     var remark: String = ""
     var link: String = ""
     var price: Double = 0.0
+    var wishlistID: UUID?
     
-    init(name: String, remark: String, link: String, price: Double) {
+    init(name: String, remark: String, link: String, price: Double, wishlistID: UUID? = nil) {
         self.name = name
         self.remark = remark
         self.link = link
         self.price = price
+        self.wishlistID = wishlistID
     }
 }
