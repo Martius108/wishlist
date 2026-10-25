@@ -23,7 +23,7 @@ struct WishlistView: View {
                     Text(wishlist.name)
                         .font(.title)
                         .wishlistImageLabelStyle(
-                            settings.backgroundImageData != nil,
+                            settings,
                             fallbackColor: .blue
                         )
                         .frame(maxWidth: .infinity, alignment: .center)
@@ -37,7 +37,7 @@ struct WishlistView: View {
                     ) {
                         Label("Add a new wish", systemImage: "square.and.pencil")
                             .wishlistImageLabelStyle(
-                                settings.backgroundImageData != nil,
+                                settings,
                                 fallbackColor: .accentColor
                             )
                     }
@@ -49,11 +49,12 @@ struct WishlistView: View {
                                 NavigationLink(destination: detailView(for: entry)) {
                                     itemRow(entry)
                                 }
+                                .buttonStyle(.plain)
                             }
 
                             WishlistShareLink(
                                 links: entries.map(\.link),
-                                imageBackground: settings.backgroundImageData != nil
+                                settings: settings
                             )
                                 .padding(.vertical, 20)
                         }
@@ -100,7 +101,7 @@ struct WishlistView: View {
         HStack(alignment: .top, spacing: 8) {
             Text(entry.name)
                 .font(.system(size: 18))
-                .foregroundColor(.black)
+                .foregroundStyle(Color.primary)
                 .multilineTextAlignment(.leading)
                 .fixedSize(horizontal: false, vertical: true)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -108,21 +109,20 @@ struct WishlistView: View {
             if entry.price != 0 {
                 Text(WishlistAmountFormatter.currencyString(entry.price))
                     .font(.subheadline)
-                    .foregroundColor(.gray)
+                    .foregroundStyle(.secondary)
                     .fixedSize()
                     .padding(.trailing, 6)
             }
 
             Image(systemName: "chevron.right")
-                .foregroundColor(.gray)
+                .foregroundStyle(.secondary)
         }
         .padding(.top, 8)
         .padding(.bottom, 8)
         .padding(.leading, 15)
         .padding(.trailing, 8)
         .frame(maxWidth: .infinity)
-        .background(Color.white)
-        .cornerRadius(8)
+        .background(WishlistElementBackground(opacity: settings.elementOpacity))
         .padding(.top, 3)
     }
 }

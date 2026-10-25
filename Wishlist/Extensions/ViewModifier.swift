@@ -32,7 +32,7 @@ struct WishlistBackground: View {
 
 struct WishlistShareLink: View {
     let links: [String]
-    let imageBackground: Bool
+    let settings: MySettings
     @State private var isShareSheetPresented = false
 
     var body: some View {
@@ -41,7 +41,7 @@ struct WishlistShareLink: View {
         } label: {
             Label("Share Wishlist", systemImage: "square.and.arrow.up")
                 .wishlistImageLabelStyle(
-                    imageBackground,
+                    settings,
                     fallbackColor: .accentColor
                 )
         }
@@ -107,13 +107,22 @@ enum WishlistShareText {
     }
 }
 
+struct WishlistElementBackground: View {
+    @Environment(\.colorScheme) private var colorScheme
+    let opacity: Double
+
+    var body: some View {
+        RoundedRectangle(cornerRadius: 12, style: .continuous)
+            .fill((colorScheme == .dark ? Color.black : Color.white).opacity(opacity))
+    }
+}
+
 struct CardBackgroundModifier: ViewModifier {
+    let settings: MySettings
     func body(content: Content) -> some View {
         content
             .padding()
-            .background(.regularMaterial)
-            .cornerRadius(20)
-            .shadow(radius: 4)
+            .background(WishlistElementBackground(opacity: settings.elementOpacity))
             .padding(.horizontal)
     }
 }
@@ -122,15 +131,17 @@ struct RoundedTextFieldModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .padding(10)
-            .background(Color(.systemBackground))
-            .cornerRadius(12)
-            .shadow(color: .gray.opacity(0.2), radius: 1, x: 0, y: 1)
+            .overlay(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .stroke(Color.secondary.opacity(0.25), lineWidth: 1)
+                    .allowsHitTesting(false)
+            )
     }
 }
 
 extension View {
-    func cardStyle() -> some View {
-        self.modifier(CardBackgroundModifier())
+    func cardStyle(_ settings: MySettings) -> some View {
+        self.modifier(CardBackgroundModifier(settings: settings))
     }
 
     func roundedTextField() -> some View {
@@ -144,16 +155,15 @@ extension View {
     }
 
     @ViewBuilder
-    func wishlistImageLabelStyle(_ imageBackground: Bool, fallbackColor: Color) -> some View {
-        if imageBackground {
+    func wishlistImageLabelStyle(_ settings: MySettings, fallbackColor: Color) -> some View {
+        if settings.backgroundImageData != nil {
             self
-                .foregroundStyle(Color(uiColor: .systemBlue))
-                .fontWeight(.semibold)
+                .foregroundStyle(.tint)
                 .padding(.horizontal, 10)
                 .padding(.vertical, 5)
                 .background(
-                    .bar,
-                    in: RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    WishlistElementBackground(opacity: settings.elementOpacity)
+                        .padding(.top, 3)
                 )
         } else {
             self.foregroundStyle(fallbackColor)

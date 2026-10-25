@@ -16,15 +16,18 @@ final class MySettings {
     var themeMode: String = "system"
     @Attribute(.externalStorage) var backgroundImageData: Data?
     var backgroundColor: String = MySettings.systemBackgroundColor
+    var elementOpacity: Double = 1
     
     init(
         themeMode: String = "system",
         backgroundImageData: Data? = nil,
-        backgroundColor: String = MySettings.systemBackgroundColor
+        backgroundColor: String = MySettings.systemBackgroundColor,
+        elementOpacity: Double = 1
     ) {
         self.themeMode = themeMode
         self.backgroundImageData = backgroundImageData
         self.backgroundColor = backgroundColor
+        self.elementOpacity = min(max(elementOpacity, 0), 1)
     }
 
     func applyTheme(_ themeMode: String) {

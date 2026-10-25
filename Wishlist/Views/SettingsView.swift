@@ -30,7 +30,7 @@ struct SettingsView: View {
                 Text("Settings")
                     .font(.title)
                     .wishlistImageLabelStyle(
-                        settings.backgroundImageData != nil,
+                        settings,
                         fallbackColor: .blue
                     )
                     .frame(maxWidth: .infinity, alignment: .center)
@@ -43,7 +43,8 @@ struct SettingsView: View {
 
                     VStack(alignment: .leading, spacing: 12) {
                         TextField("Wishlist Name", text: $wishlist.name)
-                            .textFieldStyle(.roundedBorder)
+                            .textFieldStyle(.plain)
+                            .roundedTextField()
                             .submitLabel(.done)
                             .onSubmit {
                                 saveName(of: wishlist)
@@ -69,7 +70,7 @@ struct SettingsView: View {
                         }
                     }
                     .padding()
-                    .background(.bar, in: RoundedRectangle(cornerRadius: 12))
+                    .background(WishlistElementBackground(opacity: settings.elementOpacity))
                 }
 
                 Button {
@@ -83,29 +84,24 @@ struct SettingsView: View {
                     Label("Add Wishlist", systemImage: "plus")
                 }
                 .wishlistImageLabelStyle(
-                    settings.backgroundImageData != nil,
+                    settings,
                     fallbackColor: .blue
                 )
 
                 sectionTitle("Theme Mode")
 
-                HStack(spacing: 4) {
-                    themeButton("System", value: "system")
-                    themeButton("Light", value: "light")
-                    themeButton("Dark", value: "dark")
+                Picker("Select Theme", selection: $settings.themeMode) {
+                    Text("System").tag("system")
+                    Text("Light").tag("light")
+                    Text("Dark").tag("dark")
                 }
-                .padding(4)
-                .background {
-                    if settings.backgroundImageData != nil {
-                        RoundedRectangle(cornerRadius: 8, style: .continuous)
-                            .fill(.bar)
-                    } else {
-                        RoundedRectangle(cornerRadius: 8, style: .continuous)
-                            .fill(Color.primary.opacity(0.12))
-                    }
+                .pickerStyle(.segmented)
+                .wishlistImageLabelStyle(settings, fallbackColor: .primary)
+                .onChange(of: settings.themeMode) { _, value in
+                    settings.applyTheme(value)
+                    selectedPhoto = nil
+                    try? modelContext.save()
                 }
-                .accessibilityElement(children: .contain)
-                .accessibilityLabel(Text("Select Theme"))
 
                 sectionTitle("Background Color")
 
@@ -119,7 +115,7 @@ struct SettingsView: View {
                     }
                 ))
                 .wishlistImageLabelStyle(
-                    settings.backgroundImageData != nil,
+                    settings,
                     fallbackColor: .primary
                 )
 
@@ -128,17 +124,24 @@ struct SettingsView: View {
                 PhotosPicker(selection: $selectedPhoto, matching: .images) {
                     Label("Select Background Image", systemImage: "photo")
                         .wishlistImageLabelStyle(
-                            settings.backgroundImageData != nil,
+                            settings,
                             fallbackColor: .blue
                         )
                 }
+
+                sectionTitle("Opacity")
+
+                Slider(value: $settings.elementOpacity, in: 0...1, step: 0.02)
+                    .accessibilityLabel(Text("Opacity"))
+                    .accessibilityValue(settings.elementOpacity.formatted(.percent.precision(.fractionLength(0))))
+                    .onChange(of: settings.elementOpacity) { _, _ in
+                        try? modelContext.save()
+                    }
+                Text("Opacity: \(settings.elementOpacity, format: .percent.precision(.fractionLength(0)))")
+                    .wishlistImageLabelStyle(settings, fallbackColor: .primary)
             }
             .padding()
-            .foregroundColor(
-                settings.themeMode == "dark" ? .white :
-                settings.themeMode == "light" ? .black :
-                .primary
-            )
+            .foregroundStyle(.primary)
         }
         .scrollDismissesKeyboard(.interactively)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -184,37 +187,9 @@ struct SettingsView: View {
         Text(title)
             .font(.headline)
             .wishlistImageLabelStyle(
-                settings.backgroundImageData != nil,
+                settings,
                 fallbackColor: .primary
             )
-    }
-
-    private func themeButton(_ title: LocalizedStringKey, value: String) -> some View {
-        let isSelected = settings.themeMode == value
-
-        return Button {
-            settings.applyTheme(value)
-            selectedPhoto = nil
-            try? modelContext.save()
-        } label: {
-            Text(title)
-                .font(.headline)
-                .foregroundStyle(
-                    isSelected
-                        ? Color.white
-                        : settings.backgroundImageData != nil
-                            ? Color(uiColor: .systemBlue)
-                            : Color.primary
-                )
-                .frame(maxWidth: .infinity, minHeight: 48)
-                .background(
-                    isSelected ? Color.accentColor : Color.clear,
-                    in: RoundedRectangle(cornerRadius: 6, style: .continuous)
-                )
-                .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-        .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 
     private func visibilityBinding(for wishlist: WishlistList) -> Binding<Bool> {

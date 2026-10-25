@@ -32,38 +32,22 @@ struct DetailView: View {
             if let item = shortItem {
                 VStack(alignment: .leading, spacing: 16) {
                     Text("Name:")
-                        .foregroundColor(
-                            settings.themeMode == "dark" ? .white :
-                            settings.themeMode == "light" ? .black :
-                            .primary
-                        )
+                        .foregroundStyle(.primary)
                     TextField("Name", text: $name)
                         .roundedTextField()
 
                     Text("Remark:")
-                        .foregroundColor(
-                            settings.themeMode == "dark" ? .white :
-                            settings.themeMode == "light" ? .black :
-                            .primary
-                        )
+                        .foregroundStyle(.primary)
                     TextField("Remark", text: $remark)
                         .roundedTextField()
 
                     Text("URL:")
-                        .foregroundColor(
-                            settings.themeMode == "dark" ? .white :
-                            settings.themeMode == "light" ? .black :
-                            .primary
-                        )
+                        .foregroundStyle(.primary)
                     TextField("URL", text: $link)
                         .roundedTextField()
 
                     Text("Price:")
-                        .foregroundColor(
-                            settings.themeMode == "dark" ? .white :
-                            settings.themeMode == "light" ? .black :
-                            .primary
-                        )
+                        .foregroundStyle(.primary)
                     TextField("Price", text: $priceString)
                         .keyboardType(.decimalPad)
                         .roundedTextField()
@@ -104,7 +88,7 @@ struct DetailView: View {
                     }
                     .padding(.bottom, 20)
                 }
-                .cardStyle()
+                .cardStyle(settings)
                 .onAppear {
                     name = item.name
                     remark = item.remark
@@ -115,38 +99,22 @@ struct DetailView: View {
             } else if let item = midItem {
                 VStack(alignment: .leading, spacing: 16) {
                     Text("Name:")
-                        .foregroundColor(
-                            settings.themeMode == "dark" ? .white :
-                            settings.themeMode == "light" ? .black :
-                            .primary
-                        )
+                        .foregroundStyle(.primary)
                     TextField("Name", text: $name)
                         .roundedTextField()
 
                     Text("Remark:")
-                        .foregroundColor(
-                            settings.themeMode == "dark" ? .white :
-                            settings.themeMode == "light" ? .black :
-                            .primary
-                        )
+                        .foregroundStyle(.primary)
                     TextField("Remark", text: $remark)
                         .roundedTextField()
 
                     Text("URL:")
-                        .foregroundColor(
-                            settings.themeMode == "dark" ? .white :
-                            settings.themeMode == "light" ? .black :
-                            .primary
-                        )
+                        .foregroundStyle(.primary)
                     TextField("URL", text: $link)
                         .roundedTextField()
 
                     Text("Price:")
-                        .foregroundColor(
-                            settings.themeMode == "dark" ? .white :
-                            settings.themeMode == "light" ? .black :
-                            .primary
-                        )
+                        .foregroundStyle(.primary)
                     TextField("Price", text: $priceString)
                         .keyboardType(.decimalPad)
                         .roundedTextField()
@@ -187,7 +155,7 @@ struct DetailView: View {
                     }
                     .padding(.bottom, 20)
                 }
-                .cardStyle()
+                .cardStyle(settings)
                 .onAppear {
                     name = item.name
                     remark = item.remark
@@ -198,38 +166,22 @@ struct DetailView: View {
             } else if let item = longItem {
                 VStack(alignment: .leading, spacing: 16) {
                     Text("Name:")
-                        .foregroundColor(
-                            settings.themeMode == "dark" ? .white :
-                            settings.themeMode == "light" ? .black :
-                            .primary
-                        )
+                        .foregroundStyle(.primary)
                     TextField("Name", text: $name)
                         .roundedTextField()
 
                     Text("Remark:")
-                        .foregroundColor(
-                            settings.themeMode == "dark" ? .white :
-                            settings.themeMode == "light" ? .black :
-                            .primary
-                        )
+                        .foregroundStyle(.primary)
                     TextField("Remark", text: $remark)
                         .roundedTextField()
 
                     Text("URL:")
-                        .foregroundColor(
-                            settings.themeMode == "dark" ? .white :
-                            settings.themeMode == "light" ? .black :
-                            .primary
-                        )
+                        .foregroundStyle(.primary)
                     TextField("URL", text: $link)
                         .roundedTextField()
 
                     Text("Price:")
-                        .foregroundColor(
-                            settings.themeMode == "dark" ? .white :
-                            settings.themeMode == "light" ? .black :
-                            .primary
-                        )
+                        .foregroundStyle(.primary)
                     TextField("Price", text: $priceString)
                         .keyboardType(.decimalPad)
                         .roundedTextField()
@@ -269,7 +221,7 @@ struct DetailView: View {
                     }
                     .padding(.bottom, 20)
                 }
-                .cardStyle()
+                .cardStyle(settings)
                 .onAppear {
                     name = item.name
                     remark = item.remark

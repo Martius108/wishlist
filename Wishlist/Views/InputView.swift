@@ -27,11 +27,15 @@ struct InputView: View {
     var body: some View {
         VStack {
             Form {
-                Section(header: Text("Details")) {
+                Section(header: Text("Details").wishlistImageLabelStyle(settings, fallbackColor: .secondary)) {
                     TextField("Name", text: $name)
+                        .listRowBackground(WishlistElementBackground(opacity: settings.elementOpacity))
                     TextField("Remark", text: $remark)
+                        .listRowBackground(WishlistElementBackground(opacity: settings.elementOpacity))
                     TextField("Link", text: $link)
+                        .listRowBackground(WishlistElementBackground(opacity: settings.elementOpacity))
                     TextField("Price", text: $priceString)
+                        .listRowBackground(WishlistElementBackground(opacity: settings.elementOpacity))
                         .keyboardType(.decimalPad)
                 }
                 
@@ -41,6 +45,7 @@ struct InputView: View {
                     }) {
                         Label("Save", systemImage: "square.and.arrow.down")
                     }
+                    .listRowBackground(WishlistElementBackground(opacity: settings.elementOpacity))
                 }
             }
             .scrollContentBackground(.hidden)

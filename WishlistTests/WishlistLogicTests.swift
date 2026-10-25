@@ -99,19 +99,28 @@ final class WishlistLogicTests: XCTestCase {
         let settings = MySettings()
 
         XCTAssertEqual(settings.themeMode, "system")
+        XCTAssertEqual(settings.elementOpacity, 1)
         XCTAssertNil(settings.backgroundImageData)
         XCTAssertEqual(settings.backgroundColor, MySettings.systemBackgroundColor)
+    }
+
+    func testOpacityIsClampedToItsValidRange() {
+        XCTAssertEqual(MySettings(elementOpacity: -0.2).elementOpacity, 0)
+        XCTAssertEqual(MySettings(elementOpacity: 1.2).elementOpacity, 1)
+        XCTAssertEqual(MySettings(elementOpacity: 0.42).elementOpacity, 0.42)
     }
 
     func testApplyingThemeRestoresSystemBackground() {
         let settings = MySettings(
             backgroundImageData: Data([1, 2, 3]),
-            backgroundColor: "#123456"
+            backgroundColor: "#123456",
+            elementOpacity: 0.42
         )
 
         settings.applyTheme("dark")
 
         XCTAssertEqual(settings.themeMode, "dark")
+        XCTAssertEqual(settings.elementOpacity, 0.42)
         XCTAssertNil(settings.backgroundImageData)
         XCTAssertEqual(settings.backgroundColor, MySettings.systemBackgroundColor)
     }
